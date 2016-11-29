@@ -9,10 +9,13 @@ const sharp = require('sharp');
 const app = express();
 
 
+const SVG_MIME = 'image/svg+xml';
 const validContentTypes = [
     'image/jpeg',
     'image/png',
     'image/webp',
+
+    SVG_MIME,
 ];
 
 app.get('/resize', (req, res) => {
@@ -49,6 +52,11 @@ app.get('/resize', (req, res) => {
             content = Buffer.concat([content, d], content.length + d.length);
         });
         httpRes.on('end', () => {
+            if (httpRes.headers['content-type'] === SVG_MIME) {
+                res.set('Content-Type', 'image/svg+xml');
+                res.send(content);
+                return;
+            }
             sharp(content)
                 .resize(
                     (req.query.w || 0) | 0,
