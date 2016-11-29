@@ -17,7 +17,8 @@ const validContentTypes = [
 
 app.get('/resize', (req, res) => {
     if (!req.query.key) {
-        res.status(400).end();
+        console.error('No key found');
+        res.status(400).send('no key');
         return;
     }
     const url = `https://pinecast-storage.s3.amazonaws.com/${req.query.key}`;
@@ -28,18 +29,17 @@ app.get('/resize', (req, res) => {
             format = req.query.format;
     }
 
-
-    console.log(`Resizing ${url}`);
+    console.log(`Resizing ${url} as ${format}`);
     const httpReq = https.get(url, httpRes => {
         if (httpRes.statusCode !== 200) {
             console.log('bad response');
-            res.status(404).end();
+            res.status(404).send('bad key');
             httpReq.abort();
             return;
         }
 
         if (validContentTypes.indexOf(httpRes.headers['content-type']) === -1) {
-            res.status(403).end();
+            res.status(403).send('bad content');
             httpReq.abort();
             return;
         }
@@ -60,12 +60,11 @@ app.get('/resize', (req, res) => {
                     res.set('Content-Type', 'image/jpeg');
                     res.send(data);
                 })
-                .catch(e => res.status(500).end());
-            // res.send();
+                .catch(e => res.status(500).send('could not resize'));
         });
     }).on('error', e => {
         console.error(e);
-        res.status(500).end();
+        res.status(500).send('error fetching');
     });
 });
 
