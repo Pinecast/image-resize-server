@@ -59,8 +59,8 @@ app.get('/resize', (req, res) => {
             }
             sharp(content)
                 .resize(
-                    (req.query.w || 0) | 0,
-                    (req.query.h || 0) | 0
+                    Math.min(req.query.w || 0, 1000) | 0,
+                    Math.min(req.query.h || 0, 1000) | 0
                 )
                 .toFormat(sharp.format[format])
                 .toBuffer()
