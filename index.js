@@ -65,7 +65,7 @@ app.get('/resize', (req, res) => {
                 .toFormat(sharp.format[format])
                 .toBuffer()
                 .then(data => {
-                    res.set('Content-Type', 'image/jpeg');
+                    res.set('Content-Type', `image/${format}`);
                     res.send(data);
                 })
                 .catch(e => res.status(500).send('could not resize'));
