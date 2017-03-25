@@ -53,7 +53,7 @@ app.get('/resize', (req, res) => {
         });
         httpRes.on('end', () => {
             if (httpRes.headers['content-type'] === SVG_MIME) {
-                res.set('Content-Type', 'image/svg+xml');
+                res.set('Content-Type', SVG_MIME);
                 res.send(content);
                 return;
             }
@@ -65,6 +65,7 @@ app.get('/resize', (req, res) => {
                 .toFormat(sharp.format[format])
                 .toBuffer()
                 .then(data => {
+                    res.set('X-Source-Content-Type', httpRes.headers['content-type']);
                     res.set('Content-Type', `image/${format}`);
                     res.send(data);
                 })
