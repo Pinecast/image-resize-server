@@ -12,6 +12,7 @@ const app = express();
 const SVG_MIME = 'image/svg+xml';
 const validContentTypes = [
     'image/jpeg',
+    'image/jpg',
     'image/png',
     'image/webp',
 
