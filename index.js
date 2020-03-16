@@ -69,7 +69,7 @@ app.get('/resize', (req, res) => {
                     res.set('Content-Type', `image/${format}`);
                     res.send(data);
                 })
-                .catch(e => res.status(500).send('could not resize'));
+                .catch(e => res.redirect(url));
         });
     }).on('error', e => {
         console.error(e);
